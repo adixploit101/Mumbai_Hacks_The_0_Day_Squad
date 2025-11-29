@@ -1,0 +1,75 @@
+# Security Platform Configuration
+
+api:
+  host: 0.0.0.0
+  port: 8000
+  reload: true
+
+database:
+  path: security_platform.db
+
+siem:
+  anomaly_detection:
+    sensitivity: 0.7  # 0-1, higher = more sensitive
+    baseline_window_days: 30
+    min_samples: 100
+  
+  correlation:
+    time_window_minutes: 60
+    min_confidence: 0.6
+  
+  alert_classification:
+    critical_threshold: 90
+    high_threshold: 70
+    medium_threshold: 40
+
+cti:
+  threat_feeds:
+    abuseipdb:
+      enabled: true
+      url: https://api.abuseipdb.com/api/v2/
+      api_key: YOUR_ABUSEIPDB_KEY_HERE
+    
+    virustotal:
+      enabled: true
+      url: https://www.virustotal.com/api/v3/
+      api_key: 6661d8b7a42e11bbb8332352534d94b551a0ce96e6b1ad3d27382101950f226e
+    
+    otx:
+      enabled: true
+      url: https://otx.alienvault.com/api/v1/
+      api_key: YOUR_OTX_KEY_HERE
+  
+  enrichment:
+    geolocation_db: GeoLite2-City.mmdb
+    cache_ttl_hours: 24
+  
+  risk_scoring:
+    weights:
+      severity: 0.3
+      prevalence: 0.2
+      confidence: 0.2
+      recency: 0.15
+      targeting: 0.15
+  
+  ioc_retention_days: 90
+  feed_refresh_hours: 6
+
+incident_response:
+  auto_containment:
+    enabled: false  # Requires approval for safety
+    severity_threshold: Critical
+  
+  forensics:
+    evidence_path: ./forensic_evidence
+    auto_collect: true
+  
+  notification:
+    email_enabled: false
+    slack_webhook: null
+    teams_webhook: null
+
+mitre:
+  data_file: mitre_attack_data.json
+  auto_update: true
+  update_interval_days: 7

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerts - Security Operations Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 72px;
+            background: #0a0a0a;
+            border-right: 1px solid #1f1f1f;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: transparent;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 48px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .nav-item {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 8px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #6b7280;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: #6366f1;
+            color: #fff;
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 72px;
+            padding: 32px;
+            max-width: calc(100vw - 72px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #6366f1;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #1f1f1f;
+            color: #fff;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+
+        .filters {
+            background: #0f0f0f;
+            border: 1px solid #1f1f1f;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        select,
+        input {
+            background: #0a0a0a;
+            border: 1px solid #1f1f1f;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .alerts-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .alert-card {
+            background: #0f0f0f;
+            border: 1px solid #1f1f1f;
+            border-left: 4px solid #6366f1;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .alert-card:hover {
+            border-color: #6366f1;
+            transform: translateX(4px);
+        }
+
+        .alert-card.critical {
+            border-left-color: #ef4444;
+        }
+
+        .alert-card.high {
+            border-left-color: #f59e0b;
+        }
+
+        .alert-card.medium {
+            border-left-color: #6366f1;
+        }
+
+        .alert-card.low {
+            border-left-color: #10b981;
+        }
+
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .alert-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .alert-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+
+        .alert-description {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .alert-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .alert-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+        }
+
+        .severity {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .severity-critical {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .severity-high {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .severity-medium {
+            background: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+        }
+
+        .severity-low {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #1f1f1f;
+            background: transparent;
+            color: #9ca3af;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #1f1f1f;
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo"><img src="/logo_copy.png" alt="Logo"></div>
+            <a href="/" class="nav-item"><i class="fas fa-chart-line"></i></a>
+            <div class="nav-item active"><i class="fas fa-bell"></i></div>
+            <a href="/threats.html" class="nav-item"><i class="fas fa-virus"></i></a>
+            <a href="/incidents.html" class="nav-item"><i class="fas fa-fire"></i></a>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div>
+                    <h1><i class="fas fa-bell"></i> Security Alerts</h1>
+                    <p style="color: #6b7280; font-size: 14px; margin-top: 4px;">Real-time security event monitoring</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="exportAlerts()"><i class="fas fa-download"></i>
+                        Export</button>
+                    <button class="btn btn-primary" onclick="refreshAlerts()"><i class="fas fa-rotate"></i>
+                        Refresh</button>
+                </div>
+            </header>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Severity</label>
+                    <select id="severity-filter" onchange="filterAlerts()">
+                        <option value="">All Severities</option>
+                        <option value="Critical">Critical</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Search</label>
+                    <input type="text" id="search-input" placeholder="Search alerts..." oninput="filterAlerts()">
+                </div>
+            </div>
+
+            <div class="alerts-grid" id="alerts-container">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading alerts...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let allAlerts = [];
+
+        async function loadAlerts() {
+            try {
+                const response = await fetch('/api/alerts?limit=100');
+                const data = await response.json();
+                if (data.status === 'success') {
+                    allAlerts = data.alerts;
+                    displayAlerts(allAlerts);
+                }
+            } catch (error) {
+                console.error('Error loading alerts:', error);
+                document.getElementById('alerts-container').innerHTML = '<div class="loading"><p style="color: #ef4444;">Failed to load alerts</p></div>';
+            }
+        }
+
+        function displayAlerts(alerts) {
+            const container = document.getElementById('alerts-container');
+            if (!alerts || alerts.length === 0) {
+                container.innerHTML = '<div class="loading"><p>No alerts found</p></div>';
+                return;
+            }
+
+            container.innerHTML = alerts.map(alert => `
+                <div class="alert-card ${alert.severity?.toLowerCase() || 'medium'}">
+                    <div class="alert-header">
+                        <div>
+                            <div class="alert-title">${escapeHtml(alert.title || 'Security Alert')}</div>
+                            <div class="alert-meta">
+                                <span><i class="fas fa-clock"></i> ${formatTime(alert.timestamp)}</span>
+                                <span><i class="fas fa-gauge-high"></i> ${Math.round(alert.confidence_score * 100) || 85}% confidence</span>
+                            </div>
+                        </div>
+                        <span class="severity severity-${alert.severity?.toLowerCase() || 'medium'}">${alert.severity || 'Medium'}</span>
+                    </div>
+                    <div class="alert-description">${escapeHtml(alert.description || 'No description available')}</div>
+                    <div class="alert-footer">
+                        <div class="alert-tags">
+                            <span class="tag">${alert.incident_type || 'Security Event'}</span>
+                        </div>
+                        <div class="alert-actions">
+                            <button class="action-btn" onclick="investigateAlert('${alert.id}')"><i class="fas fa-magnifying-glass"></i> Investigate</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterAlerts() {
+            const severity = document.getElementById('severity-filter').value;
+            const search = document.getElementById('search-input').value.toLowerCase();
+            let filtered = allAlerts.filter(alert => {
+                if (severity && alert.severity !== severity) return false;
+                if (search && !alert.title?.toLowerCase().includes(search) && !alert.description?.toLowerCase().includes(search)) return false;
+                return true;
+            });
+            displayAlerts(filtered);
+        }
+
+        function formatTime(timestamp) {
+            return new Date(timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            color: #ef4444;
+        }
+
+        .severity - high {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .severity - medium {
+            background: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+        }
+
+        .severity - low {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .alert - actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action - btn {
+            padding: 6px 12px;
+            border - radius: 6px;
+            border: 1px solid #1f1f1f;
+            background: transparent;
+            color: #9ca3af;
+            font - size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action - btn:hover {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .loading {
+            text - align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #1f1f1f;
+            border - top - color: #6366f1;
+            border - radius: 50 %;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media(max - width: 768px) {
+            .main {
+                margin - left: 0;
+                padding: 20px;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .filters {
+                flex - direction: column;
+            }
+        }
+    </style >
+</head >
+
+            <body>
+                <div class="container">
+                    <aside class="sidebar">
+                        <div class="logo"><img src="/logo_copy.png" alt="Logo"></div>
+                        <a href="/" class="nav-item"><i class="fas fa-chart-line"></i></a>
+                        <div class="nav-item active"><i class="fas fa-bell"></i></div>
+                        <a href="/threats.html" class="nav-item"><i class="fas fa-virus"></i></a>
+                        <a href="/incidents.html" class="nav-item"><i class="fas fa-fire"></i></a>
+                    </aside>
+
+                    <main class="main">
+                        <header class="header">
+                            <div>
+                                <h1><i class="fas fa-bell"></i> Security Alerts</h1>
+                                <p style="color: #6b7280; font-size: 14px; margin-top: 4px;">Real-time security event monitoring</p>
+                            </div>
+                            <div class="header-actions">
+                                <button class="btn btn-secondary" onclick="exportAlerts()"><i class="fas fa-download"></i>
+                                    Export</button>
+                                <button class="btn btn-primary" onclick="refreshAlerts()"><i class="fas fa-rotate"></i>
+                                    Refresh</button>
+                            </div>
+                        </header>
+
+                        <div class="filters">
+                            <div class="filter-group">
+                                <label>Severity</label>
+                                <select id="severity-filter" onchange="filterAlerts()">
+                                    <option value="">All Severities</option>
+                                    <option value="Critical">Critical</option>
+                                    <option value="High">High</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Search</label>
+                                <input type="text" id="search-input" placeholder="Search alerts..." oninput="filterAlerts()">
+                            </div>
+                        </div>
+
+                        <div class="alerts-grid" id="alerts-container">
+                            <div class="loading">
+                                <div class="spinner"></div>
+                                <p>Loading alerts...</p>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+
+                <script>
+                    let allAlerts = [];
+
+                    async function loadAlerts() {
+            try {
+                const response = await fetch('/api/alerts?limit=100');
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        allAlerts = data.alerts;
+                    displayAlerts(allAlerts);
+                }
+            } catch (error) {
+                        console.error('Error loading alerts:', error);
+                    document.getElementById('alerts-container').innerHTML = '<div class="loading"><p style="color: #ef4444;">Failed to load alerts</p></div>';
+            }
+        }
+
+                    function displayAlerts(alerts) {
+            const container = document.getElementById('alerts-container');
+                    if (!alerts || alerts.length === 0) {
+                        container.innerHTML = '<div class="loading"><p>No alerts found</p></div>';
+                    return;
+            }
+
+            container.innerHTML = alerts.map(alert => `
+                    <div class="alert-card ${alert.severity?.toLowerCase() || 'medium'}">
+                        <div class="alert-header">
+                            <div>
+                                <div class="alert-title">${escapeHtml(alert.title || 'Security Alert')}</div>
+                                <div class="alert-meta">
+                                    <span><i class="fas fa-clock"></i> ${formatTime(alert.timestamp)}</span>
+                                    <span><i class="fas fa-gauge-high"></i> ${Math.round(alert.confidence_score * 100) || 85}% confidence</span>
+                                </div>
+                            </div>
+                            <span class="severity severity-${alert.severity?.toLowerCase() || 'medium'}">${alert.severity || 'Medium'}</span>
+                        </div>
+                        <div class="alert-description">${escapeHtml(alert.description || 'No description available')}</div>
+                        <div class="alert-footer">
+                            <div class="alert-tags">
+                                <span class="tag">${alert.incident_type || 'Security Event'}</span>
+                            </div>
+                            <div class="alert-actions">
+                                <button class="action-btn" onclick="investigateAlert('${alert.id}')"><i class="fas fa-magnifying-glass"></i> Investigate</button>
+                            </div>
+                        </div>
+                    </div>
+                    `).join('');
+        }
+
+                    function filterAlerts() {
+            const severity = document.getElementById('severity-filter').value;
+                    const search = document.getElementById('search-input').value.toLowerCase();
+            let filtered = allAlerts.filter(alert => {
+                if (severity && alert.severity !== severity) return false;
+                    if (search && !alert.title?.toLowerCase().includes(search) && !alert.description?.toLowerCase().includes(search)) return false;
+                    return true;
+            });
+                    displayAlerts(filtered);
+        }
+
+                    function formatTime(timestamp) {
+            return new Date(timestamp).toLocaleString('en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+                    function escapeHtml(text) {
+            const div = document.createElement('div');
+                    div.textContent = text;
+                    return div.innerHTML;
+        }
+
+                    function refreshAlerts() {loadAlerts(); }
+                    function exportAlerts() {window.location.href = '/api/reports/alerts/pdf'; }
+                    function investigateAlert(id) {window.location.href = `/alert/${id}`; }
+
+                    // Initialize with real-time updates every 3 seconds
+                    loadAlerts();
+                    setInterval(loadAlerts, 3000);
+
+    </script>
+</body>
+
+</html>

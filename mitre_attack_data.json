@@ -1,0 +1,258 @@
+{
+  "techniques": {
+    "T1078": {
+      "name": "Valid Accounts",
+      "tactic": "Privilege Escalation",
+      "description": "Adversaries may obtain credentials of higher privileged accounts",
+      "detection": [
+        "admin login",
+        "sudo",
+        "runas"
+      ]
+    },
+    "T1566": {
+      "name": "Phishing",
+      "tactic": "Initial Access",
+      "description": "Adversaries may send phishing messages to gain access",
+      "detection": [
+        "suspicious email",
+        "malicious attachment",
+        "phishing link"
+      ]
+    },
+    "T1059": {
+      "name": "Command and Scripting Interpreter",
+      "tactic": "Execution",
+      "description": "Adversaries may abuse command and script interpreters",
+      "detection": [
+        "powershell",
+        "cmd.exe",
+        "bash",
+        "python"
+      ]
+    },
+    "T1203": {
+      "name": "Exploitation for Client Execution",
+      "tactic": "Execution",
+      "description": "Adversaries may exploit software vulnerabilities",
+      "detection": [
+        "exploit",
+        "vulnerability",
+        "CVE"
+      ]
+    },
+    "T1053": {
+      "name": "Scheduled Task/Job",
+      "tactic": "Persistence",
+      "description": "Adversaries may abuse task scheduling",
+      "detection": [
+        "scheduled task",
+        "cron",
+        "at command"
+      ]
+    },
+    "T1547": {
+      "name": "Boot or Logon Autostart Execution",
+      "tactic": "Persistence",
+      "description": "Adversaries may configure system settings to automatically execute",
+      "detection": [
+        "registry run key",
+        "startup folder",
+        "autostart"
+      ]
+    },
+    "T1068": {
+      "name": "Exploitation for Privilege Escalation",
+      "tactic": "Privilege Escalation",
+      "description": "Adversaries may exploit software vulnerabilities to elevate privileges",
+      "detection": [
+        "privilege escalation",
+        "exploit",
+        "elevation"
+      ]
+    },
+    "T1070": {
+      "name": "Indicator Removal",
+      "tactic": "Defense Evasion",
+      "description": "Adversaries may delete or modify artifacts to remove evidence",
+      "detection": [
+        "log deletion",
+        "clear event log",
+        "file deletion"
+      ]
+    },
+    "T1562": {
+      "name": "Impair Defenses",
+      "tactic": "Defense Evasion",
+      "description": "Adversaries may maliciously modify components to impair defenses",
+      "detection": [
+        "disable antivirus",
+        "stop firewall",
+        "disable logging"
+      ]
+    },
+    "T1110": {
+      "name": "Brute Force",
+      "tactic": "Credential Access",
+      "description": "Adversaries may use brute force techniques to gain access",
+      "detection": [
+        "failed login",
+        "password spray",
+        "brute force"
+      ]
+    },
+    "T1003": {
+      "name": "OS Credential Dumping",
+      "tactic": "Credential Access",
+      "description": "Adversaries may attempt to dump credentials",
+      "detection": [
+        "mimikatz",
+        "lsass",
+        "credential dump"
+      ]
+    },
+    "T1046": {
+      "name": "Network Service Scanning",
+      "tactic": "Discovery",
+      "description": "Adversaries may attempt to get a listing of services running on remote hosts",
+      "detection": [
+        "port scan",
+        "nmap",
+        "service enumeration"
+      ]
+    },
+    "T1018": {
+      "name": "Remote System Discovery",
+      "tactic": "Discovery",
+      "description": "Adversaries may attempt to get a listing of other systems",
+      "detection": [
+        "network enumeration",
+        "ping sweep",
+        "arp scan"
+      ]
+    },
+    "T1087": {
+      "name": "Account Discovery",
+      "tactic": "Discovery",
+      "description": "Adversaries may attempt to get a listing of accounts",
+      "detection": [
+        "user enumeration",
+        "net user",
+        "whoami"
+      ]
+    },
+    "T1021": {
+      "name": "Remote Services",
+      "tactic": "Lateral Movement",
+      "description": "Adversaries may use valid accounts to log into remote services",
+      "detection": [
+        "rdp",
+        "ssh",
+        "smb",
+        "psexec"
+      ]
+    },
+    "T1570": {
+      "name": "Lateral Tool Transfer",
+      "tactic": "Lateral Movement",
+      "description": "Adversaries may transfer tools between systems",
+      "detection": [
+        "file transfer",
+        "copy",
+        "scp"
+      ]
+    },
+    "T1005": {
+      "name": "Data from Local System",
+      "tactic": "Collection",
+      "description": "Adversaries may search local system sources to find files of interest",
+      "detection": [
+        "file access",
+        "data collection",
+        "search"
+      ]
+    },
+    "T1560": {
+      "name": "Archive Collected Data",
+      "tactic": "Collection",
+      "description": "Adversaries may compress and/or encrypt data prior to exfiltration",
+      "detection": [
+        "zip",
+        "rar",
+        "compression",
+        "archive"
+      ]
+    },
+    "T1041": {
+      "name": "Exfiltration Over C2 Channel",
+      "tactic": "Exfiltration",
+      "description": "Adversaries may steal data by exfiltrating it over an existing C2 channel",
+      "detection": [
+        "data transfer",
+        "outbound connection",
+        "large upload"
+      ]
+    },
+    "T1048": {
+      "name": "Exfiltration Over Alternative Protocol",
+      "tactic": "Exfiltration",
+      "description": "Adversaries may steal data by exfiltrating it over a different protocol",
+      "detection": [
+        "dns exfiltration",
+        "icmp tunnel",
+        "unusual protocol"
+      ]
+    },
+    "T1567": {
+      "name": "Exfiltration Over Web Service",
+      "tactic": "Exfiltration",
+      "description": "Adversaries may use web services to exfiltrate data",
+      "detection": [
+        "cloud upload",
+        "file sharing",
+        "dropbox",
+        "google drive"
+      ]
+    },
+    "T1486": {
+      "name": "Data Encrypted for Impact",
+      "tactic": "Impact",
+      "description": "Adversaries may encrypt data to disrupt availability",
+      "detection": [
+        "ransomware",
+        "file encryption",
+        "encrypted files"
+      ]
+    },
+    "T1490": {
+      "name": "Inhibit System Recovery",
+      "tactic": "Impact",
+      "description": "Adversaries may delete or remove built-in data to make recovery more difficult",
+      "detection": [
+        "delete backup",
+        "vssadmin delete",
+        "shadow copy"
+      ]
+    },
+    "T1498": {
+      "name": "Network Denial of Service",
+      "tactic": "Impact",
+      "description": "Adversaries may perform Network DoS attacks",
+      "detection": [
+        "ddos",
+        "syn flood",
+        "udp flood"
+      ]
+    },
+    "T1595": {
+      "name": "Active Scanning",
+      "tactic": "Reconnaissance",
+      "description": "Adversaries may execute active reconnaissance scans",
+      "detection": [
+        "vulnerability scan",
+        "port scan",
+        "network scan"
+      ]
+    }
+  }
+}
